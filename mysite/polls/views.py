@@ -1,6 +1,7 @@
 
 ## Creating views with HttpResponse and template
 from datetime import time
+from termios import VINTR
 from django import template
 from django.http import HttpResponse, HttpResponseRedirect
 # from django.template import loader
@@ -11,6 +12,9 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
+
+from rest_framework import viewsets, permissions
+from .serializers import QuestionSerializer
 
 from .models import Question, Choice
 
@@ -85,3 +89,15 @@ def vote(request, question_id):
         selected_choice.save()
         return HttpResponseRedirect(reverse('polls:results', args=(question.id, )))
 
+class QuestionViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+# class ChoiceViewSet(viewsets.ModelViewSet):
+#     queryset = Choice.objects.all()
+#     serializer_class = ChoiceSerializer
+#     permission_classes = [permissions.IsAuthenticated]

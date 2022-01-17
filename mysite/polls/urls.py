@@ -1,6 +1,11 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'questions', views.QuestionViewSet, basename='question')
+# router.register(r'choices', views.ChoiceViewSet, basename='choice')
 # app_name = 'polls'
 # urlpatterns = [
 #     path('', views.index, name='index'),
@@ -12,8 +17,10 @@ from . import views
 ## amend the URLconf
 app_name = 'polls'
 urlpatterns = [
-    path('', views.IndexView.as_view(), name='index'),
-    path('<int:pk>/', views.DetailView.as_view(), name='detail'),
-    path('<int:pk>/results/', views.ResultsView.as_view(), name='results'),
-    path('<int:question_id>/vote/', views.vote, name='vote'),
+    path('polls/', views.IndexView.as_view(), name='index'),
+    path('polls/<int:pk>/', views.DetailView.as_view(), name='detail'),
+    path('polls/<int:pk>/results/', views.ResultsView.as_view(), name='results'),
+    path('polls/<int:question_id>/vote/', views.vote, name='vote'),
+    # for api
+    path('api/', include(router.urls)),
 ]
